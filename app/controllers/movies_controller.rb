@@ -44,7 +44,7 @@ class MoviesController < ApplicationController
       
       @all_ratings = Movie.all_ratings
     else
-      redirect_to movies_path(ratings: session[:ratings], sort_by: session[:sort_by] )
+      redirect_to movies_path(ratings: session[:ratings].nil? ? params[:ratings] : session[:ratings], sort_by: session[:sort_by].nil? ? params[:sort_by] : session[:sort_by] )
     end
   end
 
