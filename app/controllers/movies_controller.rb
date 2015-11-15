@@ -11,20 +11,41 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @movies = Movie.all
-    @ratings = params[:ratings].nil? ? [] : params[:ratings].keys
-    unless @ratings.length == 0
-      ratings_where_str = "`rating` IN (?" + ",?" * (@ratings.length - 1) + ")"
-      @movies = @movies.where(@ratings.unshift(ratings_where_str))
+    # check session
+    redirected = false
+    unless params[:ratings].nil? || params[:ratings].empty?
+      session[:ratings] = params[:ratings]
+    else
+      unless session[:ratings].nil?
+        redirect_to movies_path(ratings: session[:ratings], sort_by: params[:sort_by] )
+        redirected = true
+      end
+    end
+    unless params[:sort_by].nil?
+      session[:sort_by] = params[:sort_by]
+    else
+      unless session[:sort_by].nil?
+        redirect_to movies_path(ratings: params[:ratings], sort_by: session[:sort_by])
+        redirected = true
+      end
     end
     
-    if params[:sort_by] == "release_date"
-      @movies = @movies.order(:release_date)
-    elsif params[:sort_by] == "title"
-      @movies = @movies.order(:title)
-    end
+    unless redirected 
+      @movies = Movie.all
+      @ratings = params[:ratings].nil? ? [] : params[:ratings].keys
+      unless @ratings.length == 0
+        ratings_where_str = "`rating` IN (?" + ",?" * (@ratings.length - 1) + ")"
+        @movies = @movies.where(@ratings.unshift(ratings_where_str))
+      end
     
-    @all_ratings = Movie.all_ratings
+      if params[:sort_by] == "release_date"
+        @movies = @movies.order(:release_date)
+      elsif params[:sort_by] == "title"
+        @movies = @movies.order(:title)
+      end
+      
+      @all_ratings = Movie.all_ratings
+    end
   end
 
   def new
