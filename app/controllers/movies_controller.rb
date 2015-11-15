@@ -17,7 +17,6 @@ class MoviesController < ApplicationController
       session[:ratings] = params[:ratings]
     else
       unless session[:ratings].nil?
-        redirect_to movies_path(ratings: session[:ratings], sort_by: params[:sort_by] )
         redirected = true
       end
     end
@@ -25,7 +24,6 @@ class MoviesController < ApplicationController
       session[:sort_by] = params[:sort_by]
     else
       unless session[:sort_by].nil?
-        redirect_to movies_path(ratings: params[:ratings], sort_by: session[:sort_by])
         redirected = true
       end
     end
@@ -45,6 +43,8 @@ class MoviesController < ApplicationController
       end
       
       @all_ratings = Movie.all_ratings
+    else
+      redirect_to movies_path(ratings: session[:ratings], sort_by: session[:sort_by] )
     end
   end
 
