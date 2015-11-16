@@ -28,6 +28,8 @@ class MoviesController < ApplicationController
       end
     end
     
+    session = Hash.new
+    
     unless redirected 
       @movies = Movie.all
       @ratings = params[:ratings].nil? ? [] : params[:ratings].keys
