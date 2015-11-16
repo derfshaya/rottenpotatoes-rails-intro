@@ -12,7 +12,7 @@ class MoviesController < ApplicationController
 
   def index
     # if first time, check all ratings
-    params[:ratings] = Movie.all_ratings if params[:ratings].nil? && session[:ratings].nil?
+    params[:ratings] = Movie.all_ratings_hash if params[:ratings].nil? && session[:ratings].nil?
     
     session[:ratings] = params[:ratings] if params[:ratings]
     session[:sort_by] = params[:sort_by] if params[:sort_by]
