@@ -22,7 +22,7 @@ class MoviesController < ApplicationController
     @movies = Movie.all
     @ratings = params[:ratings].nil? ? [] : params[:ratings].keys
     unless @ratings.length == 0
-      ratings_where_str = "`rating` IN (?" + ",?" * (@ratings.length - 1) + ")"
+      ratings_where_str = '"rating" IN (?' + ",?" * (@ratings.length - 1) + ")"
       @movies = @movies.where(@ratings.unshift(ratings_where_str))
     end
   
